@@ -9,4 +9,7 @@ public interface ProductDAO {
     void update(Product product);
     void delete(int id);
     Product findById(int id);
+    List<Product> findByPriceRange(double minPrice, double maxPrice);
+    List<Product> findByStockRange(int minStock, int maxStock);
+    List<Product> findByBrand(String brand);
 }

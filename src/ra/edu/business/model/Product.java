@@ -1,6 +1,7 @@
 package ra.edu.business.model;
 
 import ra.edu.utils.IApp;
+import ra.edu.validate.ProductValidator;
 
 import java.util.Scanner;
 
@@ -76,25 +77,17 @@ public class Product implements IApp {
     @Override
     public void inputData(Scanner sc) {
         System.out.print("Tên sản phẩm: ");
-        this.proName = sc.nextLine();
+        this.proName = ProductValidator.getValidProductName(sc);
 
         System.out.print("Thương hiệu: ");
-        this.proBrand = sc.nextLine();
+        this.proBrand = ProductValidator.getValidBrand(sc);
 
         System.out.print("Nhập vào giá: ");
-        try {
-            this.proPrice = Double.parseDouble(sc.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Giá không hợp lệ, đặt giá = 0");
-            this.proPrice = 0.0;
-        }
+        this.proPrice = ProductValidator.getValidPrice(sc);
+
 
         System.out.print("Số lượng tồn kho: ");
-        try {
-            this.stock = Integer.parseInt(sc.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Số lượng không hợp lệ, đặt số lượng = 0");
-            this.stock = 0;
-        }
+        this.stock = ProductValidator.getValidStock(sc);
+
     }
 }

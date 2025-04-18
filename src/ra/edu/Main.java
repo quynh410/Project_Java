@@ -61,11 +61,12 @@ public class Main {
     }
 
     private static void showMainMenu() {
-        System.out.println("\n===== MENU CHÍNH =====");
-        System.out.println("1. Quản lý khách hàng");
-        System.out.println("2. Quản lý sản phẩm");
-        System.out.println("3. Quản lý hóa đơn");
-        System.out.println("0. Đăng xuất");
+        System.out.println("\n======== MENU CHÍNH ========");
+        System.out.println("|1. Quản lý khách hàng     |");
+        System.out.println("|2. Quản lý sản phẩm       |");
+        System.out.println("|3. Quản lý hóa đơn        |");
+        System.out.println("|0. Đăng xuất              |");
+        System.out.println("============================");
         System.out.print("Lựa chọn của bạn: ");
     }
 

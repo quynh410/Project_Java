@@ -10,4 +10,7 @@ public interface ProductService {
     void deleteProduct(int id);
     List<Product> findAllProducts();
     Product findProductById(int id);
+    List<Product> findProductsByPriceRange(double minPrice, double maxPrice);
+    List<Product> findProductsByStockRange(int minStock, int maxStock);
+    List<Product> findProductsByBrand(String brand);
 }

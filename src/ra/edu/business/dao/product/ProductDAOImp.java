@@ -44,4 +44,36 @@ public class ProductDAOImp implements ProductDAO {
         }
         return null;
     }
+    @Override
+    public List<Product> findByPriceRange(double minPrice, double maxPrice) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getProPrice() >= minPrice && product.getProPrice() <= maxPrice) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Product> findByStockRange(int minStock, int maxStock) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getStock() >= minStock && product.getStock() <= maxStock) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Product> findByBrand(String brand) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getProBrand().toLowerCase().contains(brand.toLowerCase())) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
 }

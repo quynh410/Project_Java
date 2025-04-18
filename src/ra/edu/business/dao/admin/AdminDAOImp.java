@@ -57,7 +57,6 @@ public class AdminDAOImp implements AdminDAO {
                 System.out.println("Đăng nhập thành công! Chào mừng " + admin.getUsername());
                 return admin;
             } else {
-                System.out.println("Tên đăng nhập hoặc mật khẩu không đúng");
                 return null;
             }
         } catch (SQLException e) {

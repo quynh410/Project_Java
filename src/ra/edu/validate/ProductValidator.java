@@ -5,7 +5,7 @@ public class ProductValidator {
 
     // Kiểm tra tên sản phẩm
     public static boolean validateProductName(String name) {
-        return Validator.isValidText(name, 6, 100);
+        return Validator.isValidText(name, 2, 100);
     }
 
     // Kiểm tra thương hiệu
@@ -27,10 +27,9 @@ public class ProductValidator {
     public static String getValidProductName(Scanner scanner) {
         String name;
         do {
-            System.out.print("Nhập tên sản phẩm (6-100 ký tự): ");
             name = scanner.nextLine().trim();
             if (!validateProductName(name)) {
-                System.out.println("Tên sản phẩm không hợp lệ. Vui lòng nhập từ 6 đến 100 ký tự.");
+                System.out.println("Tên sản phẩm không hợp lệ. Vui lòng nhập từ 2 đến 100 ký tự.");
             }
         } while (!validateProductName(name));
         return name;
@@ -40,7 +39,6 @@ public class ProductValidator {
     public static String getValidBrand(Scanner scanner) {
         String brand;
         do {
-            System.out.print("Nhập tên thương hiệu: ");
             brand = scanner.nextLine().trim();
             if (!validateBrand(brand)) {
                 System.out.println("Thương hiệu không hợp lệ. Vui lòng nhập tên thương hiệu không rỗng (tối đa 50 ký tự).");
@@ -53,7 +51,6 @@ public class ProductValidator {
     public static double getValidPrice(Scanner scanner) {
         double price;
         do {
-            System.out.print("Nhập giá sản phẩm: ");
             try {
                 price = Double.parseDouble(scanner.nextLine().trim());
                 if (!validatePrice(price)) {
@@ -71,7 +68,6 @@ public class ProductValidator {
     public static int getValidStock(Scanner scanner) {
         int stock;
         do {
-            System.out.print("Nhập số lượng tồn kho: ");
             try {
                 stock = Integer.parseInt(scanner.nextLine().trim());
                 if (!validateStock(stock)) {

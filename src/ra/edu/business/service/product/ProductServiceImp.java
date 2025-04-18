@@ -45,4 +45,19 @@ public class ProductServiceImp implements ProductService {
     public Product findProductById(int id) {
         return productDAO.findById(id);
     }
+
+    @Override
+    public List<Product> findProductsByPriceRange(double minPrice, double maxPrice) {
+        return productDAO.findByPriceRange(minPrice, maxPrice);
+    }
+
+    @Override
+    public List<Product> findProductsByStockRange(int minStock, int maxStock) {
+        return productDAO.findByStockRange(minStock, maxStock);
+    }
+
+    @Override
+    public List<Product> findProductsByBrand(String brand) {
+        return productDAO.findByBrand(brand);
+    }
 }

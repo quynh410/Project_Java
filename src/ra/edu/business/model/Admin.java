@@ -1,6 +1,10 @@
 package ra.edu.business.model;
 
-public class Admin {
+import ra.edu.utils.IApp;
+
+import java.util.Scanner;
+
+public class Admin implements IApp {
     private int id;
     private String username;
     private String password;
@@ -64,5 +68,10 @@ public class Admin {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public void inputData(Scanner sc) {
+
     }
 }

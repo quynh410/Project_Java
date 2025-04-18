@@ -1,6 +1,9 @@
 package ra.edu.business.model;
 
 import ra.edu.utils.IApp;
+import ra.edu.validate.PhoneValidator;
+import ra.edu.validate.StringRule;
+import ra.edu.validate.Validator;
 
 import java.util.Scanner;
 
@@ -90,6 +93,15 @@ public class Customer implements IApp {
 
     @Override
     public void inputData(Scanner sc) {
-
+        System.out.println("Nhập vào tên ng dùng : ");
+        this.cusName = sc.nextLine();
+        System.out.println(" Nhập sdt ng dùng: ");
+        this.cusPhone = PhoneValidator.getValidVietnamesePhone(sc);
+        System.out.println("Nhập email: ");
+        this.cusEmail = Validator.validateEmail("Nhập email người dùng : ", sc);
+        System.out.println("Nhập địa chỉ: ");
+        this.cusAddress = Validator.validateInputString("Nhập địa chỉ người dùng : ", sc, new StringRule(1, 200));
+        System.out.println("Chọn giới tính: ");
+        this.cusGender = Validator.getValidEnum("Nhập giới tính (MALE/FEMALE/OTHER): ", sc, Gender.class);
     }
 }
