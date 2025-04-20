@@ -69,13 +69,28 @@ public class ProductUI {
     }
 
     private void addProduct() {
-        System.out.println("======= THÊM SẢN PHẨM MỚI =======");
+        System.out.println("\u001B[34m========= THÊM SẢN PHẨM MỚI =========\u001B[0m");
+
         Product p = new Product();
         p.inputData(scanner);
 
         productService.addProduct(p);
-        System.out.println("Thêm sản phẩm thành công!");
+        System.out.println("\u001B[32mThêm sản phẩm thành công!\u001B[0m");
+
+        System.out.println("\u001B[34m================================== SẢN PHẨM ĐÃ THÊM ==================================\u001B[0m");
+        System.out.printf("\u001B[36m| %-5s | %-25s | %-15s | %-15s | %-10s |\u001B[0m%n",
+                "ID", "Tên sản phẩm", "Thương hiệu", "Giá (VND)", "Tồn kho");
+        System.out.println("\u001B[36m--------------------------------------------------------------------------------------\u001B[0m");
+
+        System.out.printf("\u001B[32 m| %-5d | %-25s | %-15s | %,15.0f | %-10d |\u001B[0m%n",
+                p.getProId(),
+                p.getProName(),
+                p.getProBrand(),
+                p.getProPrice(),
+                p.getStock());
     }
+
+
 
     private void displayAll() {
         List<Product> products = productService.findAllProducts();
@@ -163,7 +178,7 @@ public class ProductUI {
             System.out.println("Cập nhật sản phẩm thành công!");
 
         } catch (NumberFormatException e) {
-            System.out.println("ID không hợp lệ!");
+            System.err.println("ID không hợp lệ!");
         }
     }
 
@@ -194,7 +209,7 @@ public class ProductUI {
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("ID không hợp lệ!");
+            System.err.println("ID không hợp lệ!");
         }
     }
 
@@ -243,7 +258,7 @@ public class ProductUI {
                     validInput = true;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Giá trị không hợp lệ. Vui lòng nhập một số.");
+                System.err.println("Giá trị không hợp lệ. Vui lòng nhập một số.");
             }
         }
 
@@ -266,14 +281,14 @@ public class ProductUI {
                 maxStock = Integer.parseInt(scanner.nextLine().trim());
 
                 if (minStock < 0 || maxStock < 0) {
-                    System.out.println("Số lượng tồn kho không được âm. Vui lòng nhập lại.");
+                    System.err.println("Số lượng tồn kho không được âm. Vui lòng nhập lại.");
                 } else if (minStock > maxStock) {
-                    System.out.println("Số lượng tối thiểu không được lớn hơn số lượng tối đa. Vui lòng nhập lại.");
+                    System.err.println("Số lượng tối thiểu không được lớn hơn số lượng tối đa. Vui lòng nhập lại.");
                 } else {
                     validInput = true;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Giá trị không hợp lệ. Vui lòng nhập một số nguyên.");
+                System.err.println("Giá trị không hợp lệ. Vui lòng nhập một số nguyên.");
             }
         }
 
@@ -287,7 +302,7 @@ public class ProductUI {
         String searchBrand = scanner.nextLine().trim();
 
         if (searchBrand.isEmpty()) {
-            System.out.println("Tên thương hiệu không được để trống!");
+            System.err.println("Tên thương hiệu không được để trống!");
             return;
         }
 
@@ -297,7 +312,7 @@ public class ProductUI {
 
     private void displaySearchResults(List<Product> results, String searchCriteria) {
         if (results.isEmpty()) {
-            System.out.println("Không tìm thấy sản phẩm nào với " + searchCriteria + ".");
+            System.err.println("Không tìm thấy sản phẩm nào với " + searchCriteria + ".");
         } else {
             System.out.println("\u001B[34m===== KẾT QUẢ TÌM KIẾM: " + results.size() + " SẢN PHẨM VỚI " + searchCriteria.toUpperCase() + " =====\u001B[0m");
 

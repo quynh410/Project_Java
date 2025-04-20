@@ -93,15 +93,15 @@ public class Customer implements IApp {
 
     @Override
     public void inputData(Scanner sc) {
-        System.out.println("Nhập vào tên ng dùng : ");
+        System.out.print("Nhập vào tên ng dùng : ");
         this.cusName = sc.nextLine();
-        System.out.println(" Nhập sdt ng dùng: ");
+        System.out.print("Nhập số điện thoại: ");
         this.cusPhone = PhoneValidator.getValidVietnamesePhone(sc);
-        System.out.println("Nhập email: ");
-        this.cusEmail = Validator.validateEmail("Nhập email người dùng : ", sc);
-        System.out.println("Nhập địa chỉ: ");
-        this.cusAddress = Validator.validateInputString("Nhập địa chỉ người dùng : ", sc, new StringRule(1, 200));
-        System.out.println("Chọn giới tính: ");
-        this.cusGender = Validator.getValidEnum("Nhập giới tính (MALE/FEMALE/OTHER): ", sc, Gender.class);
+        System.out.println("Nhập email người dùng :");
+        this.cusEmail = Validator.validateEmail(sc);
+        System.out.print("Nhập địa chỉ người dùng : ");
+        this.cusAddress = Validator.validateInputString(sc, new StringRule(1, 200));
+        System.out.print("Nhập giới tính (MALE/FEMALE/OTHER): ");
+        this.cusGender = Validator.getValidEnum(sc, Gender.class);
     }
 }

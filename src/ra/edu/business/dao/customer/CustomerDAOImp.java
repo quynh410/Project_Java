@@ -14,24 +14,26 @@ public class CustomerDAOImp implements CustomerDAO {
     }
 
     @Override
-    public void save(Customer customer) {
+    public boolean save(Customer customer) {
         customer.setCusId(autoId++);
         customers.add(customer);
+        return false;
     }
 
     @Override
-    public void update(Customer customer) {
+    public boolean update(Customer customer) {
         for (int i = 0; i < customers.size(); i++) {
             if (customers.get(i).getCusId() == customer.getCusId()) {
                 customers.set(i, customer);
-                return;
             }
         }
+        return  false;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         customers.removeIf(customer -> customer.getCusId() == id);
+        return false;
     }
 
     @Override

@@ -12,7 +12,6 @@ public class PhoneValidator {
     public static String getValidVietnamesePhone(Scanner scanner) {
         String phone;
         do {
-            System.out.print("Nhập số điện thoại (định dạng Việt Nam): ");
             phone = scanner.nextLine().trim();
             if (!validateVietnamesePhone(phone)) {
                 System.out.println("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại bắt đầu bằng 0 và có 10-11 chữ số.");
@@ -70,18 +69,6 @@ public class PhoneValidator {
                 return "Gmobile";
             default:
                 return "Không xác định";
-        }
-    }
-
-    // Hiển thị thông tin về số điện thoại Việt Nam
-    public static void displayPhoneInfo(String phone) {
-        if (validateVietnamesePhone(phone)) {
-            String provider = getNetworkProvider(phone);
-            System.out.println("Số điện thoại: " + phone);
-            System.out.println("Nhà mạng: " + provider);
-            System.out.println("Loại: Số điện thoại Việt Nam");
-        } else {
-            System.out.println("Số điện thoại không hợp lệ");
         }
     }
 }

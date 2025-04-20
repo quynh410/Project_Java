@@ -10,26 +10,30 @@ public class CustomerServiceImp implements CustomerService {
     private CustomerDAO customerDAO = new CustomerDAOImp();
 
     @Override
-    public void displayAll() {
+    public boolean displayAll() {
         List<Customer> list = customerDAO.findAll();
         for (Customer c : list) {
             System.out.println(c);
         }
+        return false;
     }
 
     @Override
-    public void addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) {
         customerDAO.save(customer);
+        return false;
     }
 
     @Override
-    public void updateCustomer(Customer customer) {
+    public boolean updateCustomer(Customer customer) {
         customerDAO.update(customer);
+        return false;
     }
 
     @Override
-    public void deleteCustomer(int id) {
+    public boolean deleteCustomer(int id) {
         customerDAO.delete(id);
+        return false;
     }
 
     @Override
@@ -43,13 +47,15 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public void createCustomer(Customer customer) {
+    public boolean createCustomer(Customer customer) {
         customerDAO.save(customer);
+        return false;
     }
 
     @Override
-    public void modifyCustomer(Customer customer) {
+    public boolean modifyCustomer(Customer customer) {
         customerDAO.update(customer);
+        return false;
     }
 }
 

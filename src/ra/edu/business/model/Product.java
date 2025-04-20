@@ -11,6 +11,7 @@ public class Product implements IApp {
     private String proBrand;
     private Double proPrice;
     private int stock;
+    private boolean status = true; // Added status field
 
     public Product() {
     }
@@ -21,6 +22,7 @@ public class Product implements IApp {
         this.proBrand = proBrand;
         this.proPrice = proPrice;
         this.stock = stock;
+        this.status = true;
     }
 
     public int getProId() {
@@ -63,6 +65,18 @@ public class Product implements IApp {
         this.stock = stock;
     }
 
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public byte getStatusAsByte() {
+        return (byte) (status ? 1 : 0);
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -71,6 +85,7 @@ public class Product implements IApp {
                 ", proBrand='" + proBrand + '\'' +
                 ", proPrice=" + proPrice +
                 ", stock=" + stock +
+                ", status=" + status +
                 '}';
     }
 
@@ -85,9 +100,7 @@ public class Product implements IApp {
         System.out.print("Nhập vào giá: ");
         this.proPrice = ProductValidator.getValidPrice(sc);
 
-
         System.out.print("Số lượng tồn kho: ");
         this.stock = ProductValidator.getValidStock(sc);
-
     }
 }

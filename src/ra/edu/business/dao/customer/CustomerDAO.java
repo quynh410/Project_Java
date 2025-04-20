@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface CustomerDAO {
     List<Customer> findAll();
-    void save(Customer customer);
-    void update(Customer customer);
-    void delete(int id);
+    boolean save(Customer customer);
+    boolean update(Customer customer);
+    boolean delete(int id);
     Customer findById(int id);
 }

@@ -1,5 +1,7 @@
 package ra.edu.validate;
 
+import ra.edu.business.model.Customer;
+
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.text.ParseException;
@@ -7,8 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Validator {
-    public static String validateEmail(String message, Scanner scanner) {
-        System.out.println(message);
+    public static String validateEmail(Scanner scanner) {
         while (true) {
             try {
                 String inputString = scanner.nextLine();
@@ -22,8 +23,7 @@ public class Validator {
         }
     }
 
-    public static String validateInputString(String message, Scanner scanner, StringRule stringRule) {
-        System.out.println(message);
+    public static String validateInputString(Scanner scanner, StringRule stringRule) {
         while (true) {
             try {
                 String inputString = scanner.nextLine().trim();
@@ -125,8 +125,7 @@ public class Validator {
         }
     }
 
-    public static <E extends Enum<E>> E getValidEnum(String message, Scanner scanner, Class<E> enumClass) {
-        System.out.println(message);
+    public static <E extends Enum<E>> E getValidEnum(Scanner scanner, Class<E> enumClass) {
         while (true) {
             try {
                 String input = scanner.nextLine().trim().toUpperCase();
@@ -145,4 +144,6 @@ public class Validator {
         }
         return names;
     }
+
+
 }
