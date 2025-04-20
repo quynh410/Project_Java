@@ -34,10 +34,10 @@ public class CustomerUI {
 
             switch (choice) {
                 case 1:
-                    addCustomer();
+                    addCustomers();
                     break;
                 case 2:
-                    displayAll();
+                    displayAllCustomers();
                     break;
                 case 3:
                     updateCustomer();
@@ -58,7 +58,7 @@ public class CustomerUI {
         } while (choice != 0);
     }
 
-    private void displayAll() {
+    private void displayAllCustomers() {
         List<Customer> customers = customerService.findAllCustomers();
 
         if (customers.isEmpty()) {
@@ -83,7 +83,7 @@ public class CustomerUI {
 
     }
 
-    private void addCustomer() {
+    private void addCustomers() {
         System.out.println("\u001B[34m========= THÊM MỚI KHÁCH HÀNG =========\u001B[0m");
 
         Customer customer = new Customer();

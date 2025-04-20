@@ -4,8 +4,8 @@ import ra.edu.business.model.Customer;
 import java.util.List;
 
 public interface CustomerService {
-    boolean displayAll();
-    boolean addCustomer(Customer customer);
+    boolean displayAllCustomers();
+    boolean addCustomers(Customer customer);
     boolean updateCustomer(Customer customer);
     boolean deleteCustomer(int id);
 

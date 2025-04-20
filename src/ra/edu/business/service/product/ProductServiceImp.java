@@ -11,7 +11,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void displayAll() {
-        List<Product> list = productDAO.findAll();
+        List<Product> list = productDAO.findAllProducts();
         if (list.isEmpty()) {
             System.out.println("Không có sản phẩm nào.");
         } else {
@@ -23,12 +23,12 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void addProduct(Product product) {
-        productDAO.save(product);
+        productDAO.addProducts(product);
     }
 
     @Override
     public void updateProduct(Product product) {
-        productDAO.update(product);
+        productDAO.updateProducts(product);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<Product> findAllProducts() {
-        return productDAO.findAll();
+        return productDAO.findAllProducts();
     }
 
     @Override

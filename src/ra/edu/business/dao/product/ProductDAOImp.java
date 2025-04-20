@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductDAOImp implements ProductDAO {
 
     @Override
-    public List<Product> findAll() {
+    public List<Product> findAllProducts() {
         List<Product> products = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
@@ -38,18 +38,19 @@ public class ProductDAOImp implements ProductDAO {
     }
 
     @Override
-    public boolean save(Product product) {
+    public boolean addProducts(Product product) {
         Connection conn = null;
         CallableStatement callSt = null;
         boolean result = false;
 
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call add_product(?, ?, ?, ?)}");
+            callSt = conn.prepareCall("{call add_product(?, ?, ?, ?,?)}");
             callSt.setString(1, product.getProName());
             callSt.setString(2, product.getProBrand());
             callSt.setDouble(3, product.getProPrice());
             callSt.setInt(4, product.getStock());
+            callSt.setInt(5,product.getStatus());
 
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
@@ -65,7 +66,7 @@ public class ProductDAOImp implements ProductDAO {
     }
 
     @Override
-    public boolean update(Product product) {
+    public boolean updateProducts(Product product) {
         Connection conn = null;
         CallableStatement callSt = null;
         boolean result = false;

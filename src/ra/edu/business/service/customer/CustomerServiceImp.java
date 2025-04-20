@@ -10,7 +10,7 @@ public class CustomerServiceImp implements CustomerService {
     private CustomerDAO customerDAO = new CustomerDAOImp();
 
     @Override
-    public boolean displayAll() {
+    public boolean displayAllCustomers() {
         List<Customer> list = customerDAO.findAll();
         for (Customer c : list) {
             System.out.println(c);
@@ -19,7 +19,7 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public boolean addCustomer(Customer customer) {
+    public boolean addCustomers(Customer customer) {
         customerDAO.save(customer);
         return false;
     }
