@@ -14,20 +14,27 @@ import java.util.List;
 public class InvoiceServiceImp implements InvoiceService {
     private final InvoiceDAO invoiceDAO;
     private final Connection conn;
-
     public InvoiceServiceImp() {
         this.conn = ConnectionDB.openConnection();
         this.invoiceDAO = new InvoiceDAOImp(conn);
 
-        List<Invoice> list = invoiceDAO.findAllInvoices();
-        if (list.isEmpty()) {
-            System.out.println("Không có hóa đơn");
-        } else {
-            for (Invoice p : list) {
-                System.out.println(p);
-            }
-        }
+//        List<Invoice> list = invoiceDAO.findAllInvoices();
+//        if (list.isEmpty()) {
+//            System.out.println("Không có hóa đơn");
+//        } else {
+//            System.out.println("\u001B[36m==================== HÓA ĐƠN ========================\u001B[0m");
+//            System.out.printf("\u001B[36m| %-10s | %-20s | %-17s |\n", "ID", "Customer Name", "Total\u001B[0m");
+//            System.out.println("\u001B[36m=====================================================\u001B[0m");
+//
+//            for (int i=0; i <  list.size(); i++) {
+//                System.out.printf("| %-10s | %-20s | %-13.2f |\n",
+//                        list.get(i).getInvoiceId(), list.get(i).getCustomerName(), list.get(i) .getTotalAmount());
+//            }
+//
+//            System.out.println("\u001B[36m=====================================================\u001B[0m");
+//        }
     }
+
 
     @Override
     public List<Invoice> getAllInvoices() {
@@ -58,7 +65,8 @@ public class InvoiceServiceImp implements InvoiceService {
     public int createInvoice(Invoice invoice, List<InvoiceDetail> details) {
         try {
             conn.setAutoCommit(false);
-
+            double totalAmount = calculateInvoiceTotal(details);
+            invoice.setTotalAmount(totalAmount);
             int invoiceId = invoiceDAO.createInvoice(invoice);
 
             if (invoiceId > 0) {
@@ -105,5 +113,12 @@ public class InvoiceServiceImp implements InvoiceService {
     @Override
     public List<InvoiceDetail> getInvoiceDetails(int invoiceId) {
         return invoiceDAO.getInvoiceDetails(invoiceId);
+    }
+    public double calculateInvoiceTotal(List<InvoiceDetail> details) {
+        double total = 0.0;
+        for (InvoiceDetail detail : details) {
+            total += detail.getQuantity() * detail.getUnitPrice();
+        }
+        return total;
     }
 }

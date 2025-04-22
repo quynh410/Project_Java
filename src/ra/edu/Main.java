@@ -1,10 +1,7 @@
 package ra.edu;
 
-import ra.edu.presentation.CustomerUI;
-import ra.edu.presentation.InvoiceUI;
-import ra.edu.presentation.ProductUI;
+import ra.edu.presentation.*;
 //import ra.edu.presentation.InvoiceUI;
-import ra.edu.presentation.UI;
 
 import java.util.Scanner;
 
@@ -44,7 +41,11 @@ public class Main {
                         InvoiceUI invoiceUI = new InvoiceUI();
                         invoiceUI.menuInvoice();
                         break;
-
+                    case 4 :
+                        // thống theo ngày,tháng, năm
+                        StatisticsUI statisticsUI = new StatisticsUI();
+                        statisticsUI.menuStatistics();
+                        break;
                     case 0:
                         // Đăng xuất
                         loginController.logout();
@@ -66,6 +67,7 @@ public class Main {
         System.out.println("|1. Quản lý khách hàng     |");
         System.out.println("|2. Quản lý sản phẩm       |");
         System.out.println("|3. Quản lý hóa đơn        |");
+        System.out.println("|4. Thống kê               |");
         System.out.println("|0. Đăng xuất              |");
         System.out.println("============================");
         System.out.print("Lựa chọn của bạn: ");

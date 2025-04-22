@@ -36,7 +36,8 @@ public class InvoiceDAOImp implements InvoiceDAO {
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage());            e.printStackTrace();
+            System.err.println("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
@@ -191,7 +192,7 @@ public List<Invoice> findInvoicesByDateRange(Date startDate, Date endDate) {
             Invoice invoice = new Invoice();
             invoice.setInvoiceId(rs.getInt("invoice_id"));
             invoice.setCustomerId(rs.getInt("cus_id"));
-            invoice.setCustomerName(rs.getString("customer_name")); // Khớp với alias trong stored procedure
+            invoice.setCustomerName(rs.getString("customer_name"));
             invoice.setCreateAt(rs.getTimestamp("create_at"));
             invoice.setTotalAmount(rs.getDouble("total_amount"));
             invoice.setStatus(rs.getString("status"));
@@ -271,7 +272,7 @@ public List<Invoice> findInvoicesByStatus(String status) {
             Invoice invoice = new Invoice();
             invoice.setInvoiceId(rs.getInt("invoice_id"));
             invoice.setCustomerId(rs.getInt("cus_id"));
-            invoice.setCustomerName(rs.getString("customer_name")); // Khớp với alias trong stored procedure
+            invoice.setCustomerName(rs.getString("customer_name"));
             invoice.setCreateAt(rs.getTimestamp("create_at"));
             invoice.setTotalAmount(rs.getDouble("total_amount"));
             invoice.setStatus(rs.getString("status"));
@@ -333,9 +334,11 @@ public List<Invoice> findInvoicesByStatus(String status) {
         boolean success = false;
 
         try {
-            callSt = conn.prepareCall("{call proc_updateinvoicestatus(?, ?)}");
+            callSt = conn.prepareCall("{call proc_updateinvoicestatus(?, ?,?)}");
             callSt.setInt(1, invoiceId);
             callSt.setString(2, status);
+            callSt.registerOutParameter(3, Types.BOOLEAN);
+
             callSt.execute();
             success = true;
         } catch (SQLException e) {
@@ -361,20 +364,22 @@ public List<Invoice> findInvoicesByStatus(String status) {
         ResultSet rs = null;
 
         try {
-            callSt = conn.prepareCall("{call proc_getinvoicedetails(?)}");
+            // Thay đổi từ GetInvoiceDetailById thành GetInvoiceDetailsByInvoiceId
+            callSt = conn.prepareCall("{call GetInvoiceDetailsByInvoiceId(?)}");
             callSt.setInt(1, invoiceId);
             rs = callSt.executeQuery();
 
             while (rs.next()) {
                 InvoiceDetail detail = new InvoiceDetail();
-                detail.setInvoiceDetailId(rs.getInt("invoice_detail_id"));
+                detail.setInvoiceDetailId(rs.getInt("detail_id"));
                 detail.setInvoiceId(rs.getInt("invoice_id"));
-                detail.setProId(rs.getInt("pro_id"));
+                detail.setProId(rs.getInt("product_id"));
                 detail.setQuantity(rs.getInt("quantity"));
                 detail.setUnitPrice(rs.getDouble("unit_price"));
                 details.add(detail);
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy chi tiết hóa đơn: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
@@ -391,18 +396,18 @@ public List<Invoice> findInvoicesByStatus(String status) {
 
         return details;
     }
-
     @Override
     public boolean addInvoiceDetail(InvoiceDetail invoiceDetail) {
         CallableStatement callSt = null;
         boolean success = false;
 
         try {
-            callSt = conn.prepareCall("{call InsertInvoiceDetail(?, ?, ?, ?)}");
+            callSt = conn.prepareCall("{call InsertInvoiceDetail(?, ?, ?, ?,?)}");
             callSt.setInt(1, invoiceDetail.getInvoiceId());
             callSt.setInt(2, invoiceDetail.getProId());
             callSt.setInt(3, invoiceDetail.getQuantity());
             callSt.setDouble(4, invoiceDetail.getUnitPrice());
+            callSt.registerOutParameter(5, Types.BOOLEAN);
             callSt.execute();
             success = true;
         } catch (SQLException e) {
@@ -419,4 +424,5 @@ public List<Invoice> findInvoicesByStatus(String status) {
 
         return success;
     }
+
 }

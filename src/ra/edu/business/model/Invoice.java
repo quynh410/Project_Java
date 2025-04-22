@@ -10,7 +10,7 @@ public class Invoice implements IApp {
     private int customerId;
     private String  customerName;
     private Date createAt;
-    private Double totalAmount;
+    private double totalAmount;
     private String status;
 
     public Invoice() {
@@ -57,11 +57,11 @@ public class Invoice implements IApp {
         this.createAt = createAt;
     }
 
-    public Double getTotalAmount() {
+    public double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
 

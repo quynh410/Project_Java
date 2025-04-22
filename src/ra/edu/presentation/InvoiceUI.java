@@ -10,7 +10,6 @@ import ra.edu.business.service.invoice.InvoiceService;
 import ra.edu.business.service.invoice.InvoiceServiceImp;
 import ra.edu.business.service.product.ProductService;
 import ra.edu.business.service.product.ProductServiceImp;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,7 +20,6 @@ public class InvoiceUI {
     private final ProductService productService = new ProductServiceImp();
     private final InvoiceDetailUI invoiceDetailUI = new InvoiceDetailUI();
     private final Scanner scanner = new Scanner(System.in);
-
 
     public void menuInvoice() {
         int choice;
@@ -208,6 +206,7 @@ public class InvoiceUI {
             System.out.println("Chưa có hóa đơn nào trong hệ thống.");
             return;
         }
+        System.out.println("\u001B[35mTổng số hóa đơn: " + invoices.size() + "\u001B[0m");
 
         System.out.println("\u001B[36m===================================================================================\u001B[0m");
         System.out.printf("\u001B[36m| %-5s | %-20s | %-20s | %-12s | %-10s |\u001B[0m%n",
@@ -263,15 +262,14 @@ public class InvoiceUI {
         }
 
         System.out.println("\u001B[32m===== THÔNG TIN HÓA ĐƠN =====\u001B[0m");
-        System.out.println("ID hóa đơn: " + invoice.getInvoiceId());
-        System.out.println("Khách hàng: " + invoice.getCustomerName() + " (ID: " + invoice.getCustomerId() + ")");
+        System.out.println("\u001B[33mID hóa đơn: \u001B[0m" + invoice.getInvoiceId());
+        System.out.println("\u001B[33mKhách hàng: \u001B[0m" + invoice.getCustomerName() + " (ID: " + invoice.getCustomerId() + ")");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String dateString = (invoice.getCreateAt() != null) ? dateFormat.format(invoice.getCreateAt()) : "N/A";
-        System.out.println("Ngày tạo: " + dateString);
+        System.out.println("\u001B[33mNgày tạo: \u001B[0m" + dateString);
 
-        System.out.println("Trạng thái: " + invoice.getStatus());
-        System.out.println("Tổng tiền: " + invoice.getTotalAmount() + " VND");
+        System.out.println("\u001B[33mTrạng thái: \u001B[0m" + invoice.getStatus());
 
         List<InvoiceDetail> details = invoiceService.getInvoiceDetails(invoiceId);
 
@@ -287,11 +285,13 @@ public class InvoiceUI {
         System.out.println("\u001B[36m==================================================================================\u001B[0m");
 
         int count = 1;
+        double calculatedTotal = 0.0;
         for (InvoiceDetail detail : details) {
             Product product = productService.findProductById(detail.getProId());
             String productName = (product != null) ? product.getProName() : "Sản phẩm #" + detail.getProId();
 
             double amount = detail.getQuantity() * detail.getUnitPrice();
+            calculatedTotal += amount;
 
             System.out.printf("| %-5d | %-30s | %-8d | %-12.2f | %-12.2f |\n",
                     count++,
@@ -302,7 +302,8 @@ public class InvoiceUI {
         }
 
         System.out.println("\u001B[36m==================================================================================\u001B[0m");
-        System.out.printf("\u001B[32mTổng cộng: %.2f VND\u001B[0m\n", invoice.getTotalAmount());
+
+        System.out.printf("\u001B[32mTổng cộng: %.2f VND\u001B[0m\n", calculatedTotal);
 
         System.out.print("\nBạn có muốn cập nhật trạng thái hóa đơn không? (Y/N): ");
         String choice = scanner.nextLine().trim();
@@ -363,12 +364,12 @@ public class InvoiceUI {
 
     private void searchInvoice() {
         System.out.println("\u001B[34m========= TÌM KIẾM HÓA ĐƠN =========\u001B[0m");
-        System.out.println("1. Tìm theo ID khách hàng");
-        System.out.println("2. Tìm theo khoảng thời gian");
-        System.out.println("3. Tìm theo trạng thái");
-        System.out.println("0. Quay lại");
+        System.out.println("|1. Tìm theo ID khách hàng         |");
+        System.out.println("|2. Tìm theo khoảng thời gian      |");
+        System.out.println("|3. Tìm theo trạng thái            |");
+        System.out.println("|0. Quay lại                       |");
+        System.out.println("\u001B[34m====================================\u001B[0m");
         System.out.print("Lựa chọn của bạn: ");
-
         int choice;
         try {
             choice = Integer.parseInt(scanner.nextLine());
@@ -419,10 +420,53 @@ public class InvoiceUI {
                 break;
 
             case 3:
-                System.out.println("Các trạng thái: pending, paid, cancelled, delivered, processing");
-                System.out.print("Nhập trạng thái cần tìm: ");
-                String status = scanner.nextLine().trim();
-                searchResults = invoiceService.getInvoicesByStatus(status);
+                System.out.println("\u001B[34m======== TRẠNG THÁI HÓA ĐƠN ========\u001B[0m");
+                System.out.println("| 1. Đang chờ xử lý   (pending)    |");
+                System.out.println("| 2. Đã xác nhận      (confirmed)  |");
+                System.out.println("| 3. Đang giao hàng   (processing) |");
+                System.out.println("| 4. Đã giao hàng     (delivered)  |");
+                System.out.println("| 5. Đã thanh toán    (paid)       |");
+                System.out.println("| 6. Đã hủy           (cancelled)  |");
+                System.out.println("| 7. Thất bại         (failed)     |");
+                System.out.println("\u001B[34m====================================\u001B[0m");
+                System.out.print("➤ Chọn trạng thái: ");
+
+
+                try {
+                    int statusChoice = Integer.parseInt(scanner.nextLine());
+                    String status;
+                    switch (statusChoice) {
+                        case 1:
+                            status = "pending";
+                            break;
+                        case 2:
+                            status = "confirmed";
+                            break;
+                        case 3:
+                            status = "processing";
+                            break;
+                        case 4:
+                            status = "delivered";
+                            break;
+                        case 5:
+                            status = "paid";
+                            break;
+                        case 6:
+                            status = "cancelled";
+                            break;
+                        case 7:
+                            status = "failed";
+                            break;
+                        default:
+                            System.err.println("Lựa chọn không hợp lệ");
+                            return;
+                    }
+
+                    searchResults = invoiceService.getInvoicesByStatus(status);
+                } catch (NumberFormatException e) {
+                    System.err.println("Lựa chọn không hợp lệ");
+                    return;
+                }
                 break;
 
             case 0:
@@ -435,13 +479,13 @@ public class InvoiceUI {
 
         if (searchResults == null || searchResults.isEmpty()) {
             System.out.println("Không tìm thấy hóa đơn nào.");
-            return;
+            return ;
         }
 
-        System.out.println("\u001B[36m=====================================================================================\u001B[0m");
+        System.out.println("\u001B[36m===================================================================================\u001B[0m");
         System.out.printf("\u001B[36m| %-5s | %-20s | %-20s | %-12s | %-10s |\u001B[0m%n",
                 "ID", "Khách hàng", "Ngày tạo", "Tổng tiền", "Trạng thái");
-        System.out.println("\u001B[36m=====================================================================================\u001B[0m");
+        System.out.println("\u001B[36m===================================================================================\u001B[0m");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
@@ -457,7 +501,15 @@ public class InvoiceUI {
                     statusColor = "\u001B[33m";
                     break;
                 case "cancelled":
+                case "failed":
                     statusColor = "\u001B[31m";
+                    break;
+                case "confirmed":
+                case "processing":
+                    statusColor = "\u001B[36m";
+                    break;
+                case "delivered":
+                    statusColor = "\u001B[34m";
                     break;
                 default:
                     statusColor = "\u001B[37m";
@@ -471,7 +523,7 @@ public class InvoiceUI {
                     statusColor,
                     invoice.getStatus());
         }
-        System.out.println("\u001B[36m=====================================================================================\u001B[0m");
+        System.out.println("\u001B[36m===================================================================================\u001B[0m");
 
         System.out.print("\nBạn có muốn xem chi tiết hóa đơn nào không? (Y/N): ");
         String viewChoice = scanner.nextLine().trim();
@@ -490,7 +542,7 @@ public class InvoiceUI {
                 }
 
                 if (found) {
-                    displayInvoiceDetail(invoiceId);
+                    displayInvoiceDetail();
                 } else {
                     System.err.println("ID hóa đơn không có trong kết quả tìm kiếm.");
                 }
@@ -498,56 +550,5 @@ public class InvoiceUI {
                 System.err.println("ID không hợp lệ");
             }
         }
-    }
-
-    private void displayInvoiceDetail(int invoiceId) {
-        // Lấy thông tin hóa đơn
-        Invoice invoice = invoiceService.getInvoiceById(invoiceId);
-        if (invoice == null) {
-            System.err.println("Không tìm thấy hóa đơn với ID " + invoiceId);
-            return;
-        }
-
-        System.out.println("\u001B[32m===== THÔNG TIN HÓA ĐƠN =====\u001B[0m");
-        System.out.println("ID hóa đơn: " + invoice.getInvoiceId());
-        System.out.println("Khách hàng: " + invoice.getCustomerName() + " (ID: " + invoice.getCustomerId() + ")");
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String dateString = (invoice.getCreateAt() != null) ? dateFormat.format(invoice.getCreateAt()) : "N/A";
-        System.out.println("Ngày tạo: " + dateString);
-
-        System.out.println("Trạng thái: " + invoice.getStatus());
-        System.out.println("Tổng tiền: " + invoice.getTotalAmount() + " VND");
-
-        List<InvoiceDetail> details = invoiceService.getInvoiceDetails(invoiceId);
-
-        if (details.isEmpty()) {
-            System.out.println("Hóa đơn này không có chi tiết nào.");
-            return;
-        }
-
-        System.out.println("\n\u001B[32m===== CHI TIẾT HÓA ĐƠN =====\u001B[0m");
-        System.out.println("\u001B[36m==========================================================================\u001B[0m");
-        System.out.printf("\u001B[36m| %-5s | %-30s | %-8s | %-12s | %-12s |\u001B[0m%n",
-                "STT", "Sản phẩm", "Số lượng", "Đơn giá", "Thành tiền");
-        System.out.println("\u001B[36m==========================================================================\u001B[0m");
-
-        int count = 1;
-        for (InvoiceDetail detail : details) {
-            Product product = productService.findProductById(detail.getProId());
-            String productName = (product != null) ? product.getProName() : "Sản phẩm #" + detail.getProId();
-
-            double amount = detail.getQuantity() * detail.getUnitPrice();
-
-            System.out.printf("| %-5d | %-30s | %-8d | %-12.2f | %-12.2f |\n",
-                    count++,
-                    productName,
-                    detail.getQuantity(),
-                    detail.getUnitPrice(),
-                    amount);
-        }
-
-        System.out.println("\u001B[36m==========================================================================\u001B[0m");
-        System.out.printf("\u001B[32mTổng cộng: %.2f VND\u001B[0m\n", invoice.getTotalAmount());
     }
 }

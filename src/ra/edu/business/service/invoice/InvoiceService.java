@@ -14,6 +14,6 @@ public interface InvoiceService {
     List<Invoice> getInvoicesByStatus(String status);
     int createInvoice(Invoice invoice, List<InvoiceDetail> details);
     boolean updateInvoiceStatus(int invoiceId, String status);
-
+    double calculateInvoiceTotal(List<InvoiceDetail> details);
     List<InvoiceDetail> getInvoiceDetails(int invoiceId);
 }
