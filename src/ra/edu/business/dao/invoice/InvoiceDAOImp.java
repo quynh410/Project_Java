@@ -36,8 +36,7 @@ public class InvoiceDAOImp implements InvoiceDAO {
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
-            // Handle the exception internally or log it
-            e.printStackTrace();
+            System.err.println("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage());            e.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
@@ -76,6 +75,7 @@ public class InvoiceDAOImp implements InvoiceDAO {
                 invoice.setStatus(rs.getString("status"));
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm hóa đơn theo ID: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
@@ -116,6 +116,7 @@ public class InvoiceDAOImp implements InvoiceDAO {
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm hóa đơn theo ID khách hàng: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
@@ -133,111 +134,188 @@ public class InvoiceDAOImp implements InvoiceDAO {
         return invoices;
     }
 
-    @Override
-    public List<Invoice> findInvoicesByDateRange(Date startDate, Date endDate) {
-        List<Invoice> invoices = new ArrayList<>();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+//    @Override
+//    public List<Invoice> findInvoicesByDateRange(Date startDate, Date endDate) {
+//        List<Invoice> invoices = new ArrayList<>();
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            String sql = "SELECT i.*, c.cus_name FROM invoice i JOIN customer c ON i.cus_id = c.cus_id " +
+//                    "WHERE i.create_at BETWEEN ? AND ?";
+//            pstmt = conn.prepareStatement(sql);
+//            pstmt.setTimestamp(1, new Timestamp(startDate.getTime()));
+//            pstmt.setTimestamp(2, new Timestamp(endDate.getTime()));
+//            rs = pstmt.executeQuery();
+//
+//            while (rs.next()) {
+//                Invoice invoice = new Invoice();
+//                invoice.setInvoiceId(rs.getInt("invoice_id"));
+//                invoice.setCustomerId(rs.getInt("cus_id"));
+//                invoice.setCustomerName(rs.getString("cus_name"));
+//                invoice.setCreateAt(rs.getTimestamp("create_at"));
+//                invoice.setTotalAmount(rs.getDouble("total_amount"));
+//                invoice.setStatus(rs.getString("status"));
+//                invoices.add(invoice);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//                if (pstmt != null) {
+//                    pstmt.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return invoices;
+//    }
+@Override
+public List<Invoice> findInvoicesByDateRange(Date startDate, Date endDate) {
+    List<Invoice> invoices = new ArrayList<>();
+    CallableStatement callSt = null;
+    ResultSet rs = null;
 
+    try {
+        callSt = conn.prepareCall("{call GetInvoicesByDateRange(?, ?)}");
+        callSt.setTimestamp(1, new Timestamp(startDate.getTime()));
+        callSt.setTimestamp(2, new Timestamp(endDate.getTime()));
+        rs = callSt.executeQuery();
+
+        while (rs.next()) {
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceId(rs.getInt("invoice_id"));
+            invoice.setCustomerId(rs.getInt("cus_id"));
+            invoice.setCustomerName(rs.getString("customer_name")); // Khớp với alias trong stored procedure
+            invoice.setCreateAt(rs.getTimestamp("create_at"));
+            invoice.setTotalAmount(rs.getDouble("total_amount"));
+            invoice.setStatus(rs.getString("status"));
+            invoices.add(invoice);
+        }
+    } catch (SQLException e) {
+        System.err.println("Lỗi khi tìm hóa đơn theo khoảng thời gian: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
         try {
-            String sql = "SELECT i.*, c.cus_name FROM invoice i JOIN customer c ON i.cus_id = c.cus_id " +
-                    "WHERE i.create_at BETWEEN ? AND ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setTimestamp(1, new Timestamp(startDate.getTime()));
-            pstmt.setTimestamp(2, new Timestamp(endDate.getTime()));
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Invoice invoice = new Invoice();
-                invoice.setInvoiceId(rs.getInt("invoice_id"));
-                invoice.setCustomerId(rs.getInt("cus_id"));
-                invoice.setCustomerName(rs.getString("cus_name"));
-                invoice.setCreateAt(rs.getTimestamp("create_at"));
-                invoice.setTotalAmount(rs.getDouble("total_amount"));
-                invoice.setStatus(rs.getString("status"));
-                invoices.add(invoice);
+            if (rs != null) {
+                rs.close();
+            }
+            if (callSt != null) {
+                callSt.close();
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi đóng tài nguyên: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
-        return invoices;
     }
 
-    @Override
-    public List<Invoice> findInvoicesByStatus(String status) {
-        List<Invoice> invoices = new ArrayList<>();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+    return invoices;
+}
+//    @Override
+//    public List<Invoice> findInvoicesByStatus(String status) {
+//        List<Invoice> invoices = new ArrayList<>();
+//        PreparedStatement pstmt = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            String sql = "SELECT i.*, c.cus_name FROM invoice i JOIN customer c ON i.cus_id = c.cus_id " +
+//                    "WHERE i.status = ?";
+//            pstmt = conn.prepareStatement(sql);
+//            pstmt.setString(1, status);
+//            rs = pstmt.executeQuery();
+//
+//            while (rs.next()) {
+//                Invoice invoice = new Invoice();
+//                invoice.setInvoiceId(rs.getInt("invoice_id"));
+//                invoice.setCustomerId(rs.getInt("cus_id"));
+//                invoice.setCustomerName(rs.getString("cus_name"));
+//                invoice.setCreateAt(rs.getTimestamp("create_at"));
+//                invoice.setTotalAmount(rs.getDouble("total_amount"));
+//                invoice.setStatus(rs.getString("status"));
+//                invoices.add(invoice);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//                if (pstmt != null) {
+//                    pstmt.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return invoices;
+//    }
+@Override
+public List<Invoice> findInvoicesByStatus(String status) {
+    List<Invoice> invoices = new ArrayList<>();
+    CallableStatement callSt = null;
+    ResultSet rs = null;
 
+    try {
+        callSt = conn.prepareCall("{call GetInvoicesByStatus(?)}");
+        callSt.setString(1, status);
+        rs = callSt.executeQuery();
+
+        while (rs.next()) {
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceId(rs.getInt("invoice_id"));
+            invoice.setCustomerId(rs.getInt("cus_id"));
+            invoice.setCustomerName(rs.getString("customer_name")); // Khớp với alias trong stored procedure
+            invoice.setCreateAt(rs.getTimestamp("create_at"));
+            invoice.setTotalAmount(rs.getDouble("total_amount"));
+            invoice.setStatus(rs.getString("status"));
+            invoices.add(invoice);
+        }
+    } catch (SQLException e) {
+        System.err.println("Lỗi khi tìm hóa đơn theo trạng thái: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
         try {
-            String sql = "SELECT i.*, c.cus_name FROM invoice i JOIN customer c ON i.cus_id = c.cus_id " +
-                    "WHERE i.status = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, status);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Invoice invoice = new Invoice();
-                invoice.setInvoiceId(rs.getInt("invoice_id"));
-                invoice.setCustomerId(rs.getInt("cus_id"));
-                invoice.setCustomerName(rs.getString("cus_name"));
-                invoice.setCreateAt(rs.getTimestamp("create_at"));
-                invoice.setTotalAmount(rs.getDouble("total_amount"));
-                invoice.setStatus(rs.getString("status"));
-                invoices.add(invoice);
+            if (rs != null) {
+                rs.close();
+            }
+            if (callSt != null) {
+                callSt.close();
             }
         } catch (SQLException e) {
+            System.err.println("Lỗi khi đóng tài nguyên: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
-        return invoices;
     }
 
+    return invoices;
+}
     @Override
     public int createInvoice(Invoice invoice) {
         CallableStatement callSt = null;
-        ResultSet rs = null;
         int newInvoiceId = -1;
 
         try {
-            callSt = conn.prepareCall("{call proc_createinvoice(?, ?)}");
+            callSt = conn.prepareCall("{call proc_createinvoice(?, ?, ?)}");
             callSt.setInt(1, invoice.getCustomerId());
             callSt.setDouble(2, invoice.getTotalAmount());
-            rs = callSt.executeQuery();
+            callSt.registerOutParameter(3, Types.INTEGER);
 
-            if (rs.next()) {
-                newInvoiceId = rs.getInt("invoice_id");
-            }
+            callSt.execute();
+
+            newInvoiceId = callSt.getInt(3);
+
         } catch (SQLException e) {
+            System.err.println("Lỗi khi tạo hóa đơn: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
-                }
                 if (callSt != null) {
                     callSt.close();
                 }
@@ -261,6 +339,7 @@ public class InvoiceDAOImp implements InvoiceDAO {
             callSt.execute();
             success = true;
         } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật trạng thái hóa đơn: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
@@ -319,7 +398,7 @@ public class InvoiceDAOImp implements InvoiceDAO {
         boolean success = false;
 
         try {
-            callSt = conn.prepareCall("{call proc_addinvoicedetail(?, ?, ?, ?)}");
+            callSt = conn.prepareCall("{call InsertInvoiceDetail(?, ?, ?, ?)}");
             callSt.setInt(1, invoiceDetail.getInvoiceId());
             callSt.setInt(2, invoiceDetail.getProId());
             callSt.setInt(3, invoiceDetail.getQuantity());

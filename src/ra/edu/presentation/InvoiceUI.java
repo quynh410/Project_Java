@@ -19,6 +19,7 @@ public class InvoiceUI {
     private final InvoiceService invoiceService = new InvoiceServiceImp();
     private final CustomerService customerService = new CustomerServiceImp();
     private final ProductService productService = new ProductServiceImp();
+    private final InvoiceDetailUI invoiceDetailUI = new InvoiceDetailUI();
     private final Scanner scanner = new Scanner(System.in);
 
 
@@ -30,6 +31,7 @@ public class InvoiceUI {
             System.out.println("|2. Hiển thị danh sách hóa đơn      |");
             System.out.println("|3. Xem chi tiết hóa đơn            |");
             System.out.println("|4. Tìm kiếm hóa đơn                |");
+            System.out.println("|5. Quản lý chi tiết hóa đơn        |");
             System.out.println("|0. Quay lại                        |");
             System.out.println("=====================================");
             System.out.print("Lựa chọn của bạn: ");
@@ -52,6 +54,9 @@ public class InvoiceUI {
                     break;
                 case 4:
                     searchInvoice();
+                    break;
+                case 5:
+                    invoiceDetailUI.menuInvoiceDetail();
                     break;
                 case 0:
                     break;

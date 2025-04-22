@@ -58,11 +58,11 @@ public class InvoiceDetail implements IApp {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Double getSubtotal() {
+    public double getSubtotal() {
         return unitPrice * quantity;
     }
 
@@ -79,6 +79,17 @@ public class InvoiceDetail implements IApp {
 
     @Override
     public void inputData(Scanner sc) {
+        System.out.print("Nhập mã hóa đơn: ");
+        this.invoiceId = Integer.parseInt(sc.nextLine());
 
+        System.out.print("Nhập mã sản phẩm: ");
+        this.proId = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Nhập số lượng: ");
+        this.quantity = Integer.parseInt(sc.nextLine());
+
+        System.out.print("Nhập đơn giá: ");
+        this.unitPrice = Double.parseDouble(sc.nextLine());
     }
+
 }
