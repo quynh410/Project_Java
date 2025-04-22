@@ -97,7 +97,7 @@ public class Customer implements IApp {
         this.cusName = sc.nextLine();
         System.out.print("Nhập số điện thoại: ");
         this.cusPhone = PhoneValidator.getValidVietnamesePhone(sc);
-        System.out.println("Nhập email người dùng :");
+        System.out.print("Nhập email người dùng :");
         this.cusEmail = Validator.validateEmail(sc);
         System.out.print("Nhập địa chỉ người dùng : ");
         this.cusAddress = Validator.validateInputString(sc, new StringRule(1, 200));

@@ -1,8 +1,9 @@
 package ra.edu;
 
 import ra.edu.presentation.CustomerUI;
-import ra.edu.presentation.ProductUI;
 import ra.edu.presentation.InvoiceUI;
+import ra.edu.presentation.ProductUI;
+//import ra.edu.presentation.InvoiceUI;
 import ra.edu.presentation.UI;
 
 import java.util.Scanner;

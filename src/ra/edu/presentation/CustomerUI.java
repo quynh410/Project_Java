@@ -16,7 +16,7 @@ public class CustomerUI {
     public void menuCustomer() {
         int choice;
         do {
-            System.out.println("\u001B[34m========= QUẢN LÝ KHÁCH HÀNG =========\u001B[0m");
+            System.out.println("\u001B[34m========= QUẢN LÝ KHÁCH HÀNG ==========\u001B[0m");
             System.out.println("|1. Thêm mới khách hàng               |");
             System.out.println("|2. Hiển thị danh sách khách hàng     |");
             System.out.println("|3. Cập nhật thông tin khách hàng     |");
@@ -62,7 +62,7 @@ public class CustomerUI {
         List<Customer> customers = customerService.findAllCustomers();
 
         if (customers.isEmpty()) {
-            System.out.println("Chưa có khách hàng nào trong hệ thống.");
+            System.err.println("Chưa có khách hàng nào trong hệ thống.");
             return;
         }
 

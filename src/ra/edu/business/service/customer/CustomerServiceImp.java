@@ -20,7 +20,7 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public boolean addCustomers(Customer customer) {
-        customerDAO.save(customer);
+        customerDAO.add(customer);
         return false;
     }
 
@@ -48,7 +48,7 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public boolean createCustomer(Customer customer) {
-        customerDAO.save(customer);
+        customerDAO.add(customer);
         return false;
     }
 
