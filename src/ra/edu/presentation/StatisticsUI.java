@@ -146,7 +146,7 @@ public class StatisticsUI {
         System.out.printf("\u001B[32mTổng doanh thu: %.2f VND\u001B[0m\n", totalRevenue);
         System.out.println("\u001B[36m=============================================\u001B[0m");
 
-        System.out.println("\u001B[36m=============================== DANH SÁCH HÓA ĐƠN =================================\u001B[0m");
+        System.out.println("\u001B[36m=============================== DANH SÁCH HÓA ĐƠN ================== ===============\u001B[0m");
         System.out.printf("\u001B[36m| %-5s | %-20s | %-20s | %-12s | %-10s |\u001B[0m%n",
                 "ID", "Khách hàng", "Ngày tạo", "Tổng tiền", "Trạng thái");
         System.out.println("\u001B[36m===================================================================================\u001B[0m");

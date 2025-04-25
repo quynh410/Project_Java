@@ -26,6 +26,7 @@ public class ProductDAOImp implements ProductDAO {
                 product.setProBrand(rs.getString("pro_brand"));
                 product.setProPrice(rs.getDouble("pro_price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -44,11 +45,12 @@ public class ProductDAOImp implements ProductDAO {
 
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call add_product(?, ?, ?, ?)}");
+            callSt = conn.prepareCall("{call add_product(?, ?, ?, ?,?)}");
             callSt.setString(1, product.getProName());
             callSt.setString(2, product.getProBrand());
             callSt.setDouble(3, product.getProPrice());
             callSt.setInt(4, product.getStock());
+            callSt.setBoolean(5,product.isStatus());
 
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
@@ -71,12 +73,13 @@ public class ProductDAOImp implements ProductDAO {
 
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call proc_updateproduct(?, ?, ?, ?, ?)}");
+            callSt = conn.prepareCall("{call proc_updateproduct(?, ?, ?, ?, ?,?)}");
             callSt.setInt(1, product.getProId());
             callSt.setString(2, product.getProName());
             callSt.setString(3, product.getProBrand());
             callSt.setDouble(4, product.getProPrice());
             callSt.setInt(5, product.getStock());
+            callSt.setBoolean(6, product.isStatus());
 
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
@@ -132,6 +135,7 @@ public class ProductDAOImp implements ProductDAO {
                 product.setProBrand(rs.getString("pro_brand"));
                 product.setProPrice(rs.getDouble("pro_price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi tìm sản phẩm theo ID: " + e.getMessage());
@@ -161,6 +165,7 @@ public class ProductDAOImp implements ProductDAO {
                 product.setProBrand(rs.getString("pro_brand"));
                 product.setProPrice(rs.getDouble("pro_price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -191,6 +196,7 @@ public class ProductDAOImp implements ProductDAO {
                 product.setProBrand(rs.getString("pro_brand"));
                 product.setProPrice(rs.getDouble("pro_price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -220,6 +226,7 @@ public class ProductDAOImp implements ProductDAO {
                 product.setProBrand(rs.getString("pro_brand"));
                 product.setProPrice(rs.getDouble("pro_price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
                 products.add(product);
             }
         } catch (SQLException e) {

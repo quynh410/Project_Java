@@ -88,6 +88,7 @@ public class ProductUI {
                 p.getProBrand(),
                 p.getProPrice(),
                 p.getStock());
+                p.isStatus();
     }
 
 
@@ -98,20 +99,21 @@ public class ProductUI {
         if (products.isEmpty()) {
             System.out.println("Không có sản phẩm nào.");
         } else {
-            System.out.println("\u001B[34m=============================== DANH SÁCH SẢN PHẨM =============================\u001B[0m");
+            System.out.println("\u001B[34m======================================= DANH SÁCH SẢN PHẨM =======================================\u001B[0m");
 
-            System.out.printf("\u001B[36m| %-5s | %-20s | %-15s | %-15s | %-10s |\u001B[0m%n",
-                    "ID", "Tên sản phẩm", "Thương hiệu", "Giá (VND)", "Tồn kho");
+            System.out.printf("\u001B[36m| %-5s | %-20s | %-15s | %-15s | %-10s |%-15s |\u001B[0m%n",
+                    "ID", "Tên sản phẩm", "Thương hiệu", "Giá (VND)", "Tồn kho", "Trạng thái");
 
-            System.out.println("---------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------------------");
 
             for (Product p : products) {
-                System.out.printf("\u001B[32m| %-5d | %-20s | %-15s | %,15.0f | %-10d |\u001B[0m%n",
+                System.out.printf("\u001B[32m| %-5d | %-20s | %-15s | %,15.0f | %-10d |%-15s |\u001B[0m%n",
                         p.getProId(),
                         p.getProName(),
                         p.getProBrand(),
                         p.getProPrice(),
-                        p.getStock());
+                        p.getStock(),
+                        p.isStatus() ? "Hoạt động" : "Không hoạt động");
             }
 
         }
@@ -136,6 +138,7 @@ public class ProductUI {
             System.out.printf("\u001B[33m%-20s\u001B[0m: %s%n", "Thương hiệu", existing.getProBrand());
             System.out.printf("\u001B[33m%-20s\u001B[0m: %.2f VND%n", "Giá", existing.getProPrice());
             System.out.printf("\u001B[33m%-20s\u001B[0m: %d%n", "Số lượng tồn kho", existing.getStock());
+            System.out.printf("\u001B[33m%-20s\u001B[0m: %s%n", "Trạng thái", existing.isStatus());
             System.out.println("\u001B[36m=========================================================================================\u001B[0m");
 
 
@@ -173,6 +176,16 @@ public class ProductUI {
                     System.out.println("Số lượng không hợp lệ, giữ nguyên số lượng cũ");
                 }
             }
+            System.out.println("\u001B[35mBạn có muốn cập nhật trạng thái ko ? (Y/N) :\u001B[0m");
+            if(scanner.nextLine().equalsIgnoreCase("Y")) {
+                System.out.println("Trạng thái mới true/false: ");
+                String statusStr = scanner.nextLine();
+                if (statusStr.equalsIgnoreCase("true") || statusStr.equalsIgnoreCase("false")) {
+                    existing.setStatus(Boolean.parseBoolean(statusStr));
+                } else {
+                    System.out.println("Trạng thái không hợp lệ, giữ nguyên trạng thái cũ");
+                }
+            }
 
             productService.updateProduct(existing);
             System.out.println("Cập nhật sản phẩm thành công!");
@@ -195,15 +208,19 @@ public class ProductUI {
                 return;
             }
 
-            System.out.println("Thông tin sản phẩm sẽ bị xóa:");
-            System.out.println(product);
+            System.out.println("\n\u001B[33m====== Thông tin sản phẩm xóa ======\u001B[0m");
+            System.out.printf("%-10s: %s\n", "ID", product.getProId());
+            System.out.printf("%-10s: %s\n", "Tên", product.getProName());
+            System.out.printf("%-10s: %.2f\n", "Giá", product.getProPrice());
+            System.out.printf("%-10s: %d\n", "Tồn kho", product.getStock());
+            System.out.println("\n\u001B[33m------------------------------------------------\n\u001B[0m");
 
             System.out.print("\u001B[35mBạn có chắc chắn muốn xóa sản phẩm này? (Y/N): \u001B[0m");
             String confirm = scanner.nextLine();
 
             if (confirm.equalsIgnoreCase("Y")) {
                 productService.deleteProduct(id);
-                System.out.println("Xóa sản phẩm thành công!");
+                System.out.println("\u001B[32mXóa sản phẩm thành công!\u001B[0m");
             } else {
                 System.out.println("Đã hủy thao tác xóa!");
             }
@@ -212,6 +229,7 @@ public class ProductUI {
             System.err.println("ID không hợp lệ!");
         }
     }
+
 
     private void findProductById() {
         System.out.println("\u001B[0m===== TÌM KIẾM SẢN PHẨM =====\u001B[0m");
@@ -224,12 +242,13 @@ public class ProductUI {
             if (product == null) {
                 System.out.println("Không tìm thấy sản phẩm với ID: " + id);
             } else {
-                System.out.println("\u001B[32mThông tin sản phẩm\u001B[0m");
+                System.out.println("\u001B[32m========Thông tin sản phẩm========\u001B[0m");
                 System.out.printf("\u001B[33mID: %d%n\u001B[0m", product.getProId());
                 System.out.printf("\u001B[33mTên: %s%n\u001B[0m", product.getProName());
                 System.out.printf("\u001B[33mThương hiệu: %s%n\u001B[0m", product.getProBrand());
                 System.out.printf("\u001B[33mGiá: %,.0f VND%n\u001B[0m", product.getProPrice());
                 System.out.printf("\u001B[33mTồn kho: %d%n\u001B[0m", product.getStock());
+                System.out.println("\u001B[32m==================================\u001B[0m");
             }
 
         } catch (NumberFormatException e) {

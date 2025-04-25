@@ -32,7 +32,13 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public boolean deleteCustomer(int id) {
-        customerDAO.delete(id);
+        Customer customer = findCustomerById(id);
+        if (customer != null && !customer.isStatus()) {
+            return customerDAO.delete(id);
+        } else if (customer != null && customer.isStatus()) {
+            System.err.println("Không thể xóa khách hàng có trạng thái hoạt động (true).");
+            return false;
+        }
         return false;
     }
 

@@ -66,21 +66,21 @@ public class CustomerUI {
             return;
         }
 
-        System.out.println("\u001B[34m============================================== DANH SÁCH KHÁCH HÀNG ==============================================\u001B[0m");
-        System.out.printf("\u001B[36m| %-5s | %-20s | %-15s | %-25s | %-20s | %-10s |\u001B[0m\n",
-                "ID", "Tên", "SĐT", "Email", "Địa chỉ", "Giới tính");
-        System.out.println("\u001B[36m------------------------------------------------------------------------------------------------------------------\u001B[0m");
+        System.out.println("\u001B[34m===================================================== DANH SÁCH KHÁCH HÀNG ====================================================\u001B[0m");
+        System.out.printf("\u001B[36m| %-5s | %-20s | %-15s | %-25s | %-20s | %-10s | %-10s |\u001B[0m\n",
+                "ID", "Tên", "SĐT", "Email", "Địa chỉ", "Giới tính", "Trạng thái");
+        System.out.println("\u001B[36m-------------------------------------------------------------------------------------------------------------------------------\u001B[0m");
 
         for (Customer customer : customers) {
-            System.out.printf("\u001B[32m| %-5d | %-20s | %-15s | %-25s | %-20s | %-10s |\u001B[0m\n",
+            System.out.printf("\u001B[32m| %-5d | %-20s | %-15s | %-25s | %-20s | %-10s | %-10s |\u001B[0m\n",
                     customer.getCusId(),
                     customer.getCusName(),
                     customer.getCusPhone(),
                     customer.getCusEmail(),
                     customer.getCusAddress(),
-                    customer.getCusGender());
+                    customer.getCusGender(),
+                    customer.isStatus() ? "Hoạt động" : "Không hoạt động");
         }
-
     }
 
     private void addCustomers() {
@@ -97,7 +97,7 @@ public class CustomerUI {
 
             System.out.println("\u001B[34m============================================== KHÁCH HÀNG ĐÃ THÊM ================================================\u001B[0m");
             System.out.printf("\u001B[36m| %-5s | %-20s | %-15s | %-25s | %-20s | %-10s |\u001B[0m\n",
-                    "ID", "Tên", "SĐT", "Email", "Địa chỉ", "Giới tính");
+                    "ID", "Tên", "SĐT", "Email", "Địa chỉ", "Giới tính","Trạng thái");
             System.out.println("\u001B[36m------------------------------------------------------------------------------------------------------------------\u001B[0m");
 
             System.out.printf("\u001B[32m| %-5d | %-20s | %-15s | %-25s | %-20s | %-10s |\u001B[0m\n",
@@ -204,9 +204,22 @@ public class CustomerUI {
                 Customer.Gender newGender = Validator.getValidEnum(scanner, Customer.Gender.class);
                 customer.setCusGender(newGender);
             }
+            // update status
+            System.out.println("Trạng thái hiện tại: " + (customer.isStatus() ? "Hoạt động" : "Không hoạt động"));
+            System.out.print("\u001B[35mBạn có muốn thay đổi trạng thái? (Y/N): \u001B[0m");
+            String changeStatus = scanner.nextLine();
+            if (changeStatus.equalsIgnoreCase("Y")) {
+                System.out.print("Nhập trạng thái mới (true/false): ");
+                String statusInput = scanner.nextLine();
+                if (statusInput.equalsIgnoreCase("true") ||
+                        statusInput.equalsIgnoreCase("false")) {
+                    customer.setStatus(Boolean.parseBoolean(statusInput));
+                } else {
+                    System.out.println("\u001B[31mTrạng thái không hợp lệ. Giữ nguyên trạng thái cũ.\u001B[0m");
+                }
+            }
 
-
-            // Validate and update customer
+            // Khi cập nhật khách hàng
             List<Customer> customerList = customerService.findAllCustomers();
             if (CustomerValidator.validateCustomer(customer, customerList.stream()
                     .filter(c -> c.getCusId() != customer.getCusId())
@@ -222,6 +235,7 @@ public class CustomerUI {
         } catch (Exception e) {
             System.out.println("\u001B[31mLỗi khi cập nhật khách hàng: " + e.getMessage() + "\u001B[0m");
         }
+
     }
 
     private void deleteCustomer() {
@@ -237,6 +251,12 @@ public class CustomerUI {
                 return;
             }
 
+            if (customer.isStatus()) {
+                System.out.println("\u001B[31mKhông thể xóa khách hàng có trạng thái hoạt động (true).\u001B[0m");
+                System.out.println("\u001B[31mĐể xóa, hãy cập nhật trạng thái khách hàng thành không hoạt động (false) trước.\u001B[0m");
+                return;
+            }
+
             System.out.println("Thông tin khách hàng sẽ bị xóa:");
             System.out.println("\u001B[36m========================== THÔNG TIN KHÁCH HÀNG ===========================\u001B[0m");
             System.out.printf("\u001B[33m%-20s\u001B[0m: %d\n", "ID", customer.getCusId());
@@ -245,15 +265,19 @@ public class CustomerUI {
             System.out.printf("\u001B[33m%-20s\u001B[0m: %s\n", "Email", customer.getCusEmail());
             System.out.printf("\u001B[33m%-20s\u001B[0m: %s\n", "Địa chỉ", customer.getCusAddress());
             System.out.printf("\u001B[33m%-20s\u001B[0m: %s\n", "Giới tính", customer.getCusGender());
+            System.out.printf("\u001B[33m%-20s\u001B[0m: %s\n", "Trạng thái", customer.isStatus() ? "Hoạt động" : "Không hoạt động");
             System.out.println("\u001B[36m===========================================================================\u001B[0m");
-
 
             System.out.print("\u001B[35mBạn có chắc chắn muốn xóa khách hàng này? (Y/N): \u001B[0m");
             String confirm = scanner.nextLine();
 
             if (confirm.equalsIgnoreCase("Y")) {
-                customerService.deleteCustomer(id);
-                System.out.println("\u001B[32mXóa khách hàng thành công!\u001B[0m");
+                boolean result = customerService.deleteCustomer(id);
+                if (result) {
+                    System.out.println("\u001B[32mXóa khách hàng thành công!\u001B[0m");
+                } else {
+                    System.out.println("\u001B[31mXóa khách hàng thất bại!\u001B[0m");
+                }
             } else {
                 System.out.println("Đã hủy thao tác xóa khách hàng.");
             }

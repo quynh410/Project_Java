@@ -10,6 +10,7 @@ import ra.edu.business.service.invoice.InvoiceService;
 import ra.edu.business.service.invoice.InvoiceServiceImp;
 import ra.edu.business.service.product.ProductService;
 import ra.edu.business.service.product.ProductServiceImp;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -73,9 +74,9 @@ public class InvoiceUI {
                 System.err.println("Chưa có khách hàng nào trong hệ thống.");
                 return;
             }
-            System.out.println("\u001B[36m=================== DANH SÁCH KHÁCH HÀNG =====================\u001B[0m");
+            System.out.println("\u001B[36m================ DANH SÁCH KHÁCH HÀNG =================\u001B[0m");
             System.out.printf("\u001B[36m| %-5s | %-25s | %-15s |\u001B[0m%n", "ID", "Tên khách hàng", "Số điện thoại");
-            System.out.println("\u001B[36m---------------------------------------------------------\u001B[0m");
+            System.out.println("\u001B[36m-------------------------------------------------------\u001B[0m");
             for (Customer c : customers) {
                 System.out.printf("\u001B[32m| %-5d | %-25s | %-15s |\u001B[0m%n",
                         c.getCusId(), c.getCusName(), c.getCusPhone());
@@ -107,14 +108,18 @@ public class InvoiceUI {
             List<InvoiceDetail> invoiceDetails = new ArrayList<>();
             double totalAmount = 0;
 
-            System.out.println("\u001B[36m============================ DANH SÁCH SẢN PHẨM ============================\u001B[0m");
-            System.out.printf("\u001B[36m| %-5s | %-30s | %-10s | %-10s |\u001B[0m%n", "ID", "Tên sản phẩm", "Giá", "Tồn kho");
-            System.out.println("\u001B[36m-------------------------------------------------------------------------\u001B[0m");
+            boolean hasAvailableProducts = false;
             for (Product p : products) {
-                System.out.printf("\u001B[32m| %-5d | %-30s | %-10.2f | %-10d |\u001B[0m%n",
-                        p.getProId(), p.getProName(), p.getProPrice(), p.getStock());
+                if (p.getStock() > 0) {
+                    System.out.printf("\u001B[32m| %-5d | %-30s | %-10.2f | %-10d |\u001B[0m%n",
+                            p.getProId(), p.getProName(), p.getProPrice(), p.getStock());
+                    hasAvailableProducts = true;
+                }
             }
-
+            if (!hasAvailableProducts) {
+                System.err.println("Không có sản phẩm nào còn hàng.");
+                return;
+            }
             boolean addMore = true;
             while (addMore) {
                 System.out.print("Nhập ID sản phẩm: ");
@@ -197,7 +202,6 @@ public class InvoiceUI {
             e.printStackTrace();
         }
     }
-
     private void displayAllInvoice() {
         System.out.println("\u001B[34m========= DANH SÁCH HÓA ĐƠN =========\u001B[0m");
         List<Invoice> invoices = invoiceService.getAllInvoices();
@@ -231,8 +235,7 @@ public class InvoiceUI {
                 default:
                     statusColor = "\u001B[37m";
             }
-
-            System.out.printf("| %-5d | %-20s | %-20s | %-12.2f | %s%-10s\u001B[0m |\n",
+            System.out.printf("| %-5d | %-20s | %-20s | %,.2f VND | %s%-10s\u001B[0m |\n",
                     invoice.getInvoiceId(),
                     invoice.getCustomerName(),
                     dateString,
@@ -301,9 +304,11 @@ public class InvoiceUI {
                     amount);
         }
 
-        System.out.println("\u001B[36m==================================================================================\u001B[0m");
+        System.out.println("\u001B[32m=================================================\u001B[0m");
+        System.out.printf("\u001B[32mTổng số lượng sản phẩm: %d\u001B[0m\n", details.size());
+        System.out.printf("\u001B[32mTổng cộng: %,12.2f VND\u001B[0m\n", calculatedTotal);
 
-        System.out.printf("\u001B[32mTổng cộng: %.2f VND\u001B[0m\n", calculatedTotal);
+        System.out.println("\u001B[32m=================================================\u001B[0m");
 
         System.out.print("\nBạn có muốn cập nhật trạng thái hóa đơn không? (Y/N): ");
         String choice = scanner.nextLine().trim();
@@ -479,7 +484,7 @@ public class InvoiceUI {
 
         if (searchResults == null || searchResults.isEmpty()) {
             System.out.println("Không tìm thấy hóa đơn nào.");
-            return ;
+            return;
         }
 
         System.out.println("\u001B[36m===================================================================================\u001B[0m");

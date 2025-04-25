@@ -5,7 +5,6 @@ import ra.edu.business.model.Customer;
 import java.util.List;
 
 public class CustomerValidator {
-    // Kiểm tra tên khách hàng (không rỗng, độ dài từ 1-30 ký tự)
     public static boolean validateCustomerName(String name) {
         return name != null && name.trim().length() >= 1 && name.trim().length() <= 30;
     }
@@ -23,7 +22,7 @@ public class CustomerValidator {
     }
 
     public static boolean validateCustomerAddress(String address) {
-        return address != null && !address.trim().isEmpty() && address.length() <= 200;
+        return address != null && !address.trim().isEmpty() && address.length() <= 255;
     }
 
     public static boolean isPhoneDuplicate(String phone, List<Customer> customerList) {

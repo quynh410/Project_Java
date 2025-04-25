@@ -14,21 +14,23 @@ public class Customer implements IApp {
     private String cusEmail;
     private String cusAddress;
     private Gender cusGender;
-
+    private boolean status;
     public enum Gender {
         MALE, FEMALE, OTHER
     }
 
     public Customer() {
+        this.status = true;
     }
 
-    public Customer(int cusId, String cusName, String cusPhone, String cusEmail, String cusAddress, Gender cusGender) {
+    public Customer(int cusId, String cusName, String cusPhone, String cusEmail, String cusAddress, Gender cusGender, boolean status) {
         this.cusId = cusId;
         this.cusName = cusName;
         this.cusPhone = cusPhone;
         this.cusEmail = cusEmail;
         this.cusAddress = cusAddress;
         this.cusGender = cusGender;
+        this.status = status;
     }
 
     public int getCusId() {
@@ -79,6 +81,14 @@ public class Customer implements IApp {
         this.cusGender = cusGender;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -88,6 +98,7 @@ public class Customer implements IApp {
                 ", cusEmail='" + cusEmail + '\'' +
                 ", cusAddress='" + cusAddress + '\'' +
                 ", cusGender=" + cusGender +
+                ", status=" + status +
                 '}';
     }
 

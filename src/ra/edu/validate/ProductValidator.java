@@ -3,22 +3,18 @@ import java.util.Scanner;
 
 public class ProductValidator {
 
-    // Kiểm tra tên sản phẩm
     public static boolean validateProductName(String name) {
         return Validator.isValidText(name, 2, 100);
     }
 
-    // Kiểm tra thương hiệu
     public static boolean validateBrand(String brand) {
         return Validator.isValidText(brand, 1, 50);
     }
 
-    // Kiểm tra giá sản phẩm
     public static boolean validatePrice(double price) {
         return price > 0;
     }
 
-    // Kiểm tra số lượng tồn kho
     public static boolean validateStock(int stock) {
         return stock >= 0;
     }
@@ -35,7 +31,6 @@ public class ProductValidator {
         return name;
     }
 
-    // Nhập và kiểm tra thương hiệu
     public static String getValidBrand(Scanner scanner) {
         String brand;
         do {
@@ -47,7 +42,6 @@ public class ProductValidator {
         return brand;
     }
 
-    // Nhập và kiểm tra giá sản phẩm
     public static double getValidPrice(Scanner scanner) {
         double price;
         do {
@@ -64,7 +58,6 @@ public class ProductValidator {
         return price;
     }
 
-    // Nhập và kiểm tra số lượng tồn kho
     public static int getValidStock(Scanner scanner) {
         int stock;
         do {

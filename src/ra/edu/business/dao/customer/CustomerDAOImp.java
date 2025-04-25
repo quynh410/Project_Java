@@ -28,6 +28,8 @@ public class CustomerDAOImp implements CustomerDAO {
                 customer.setCusEmail(rs.getString("cus_email"));
                 customer.setCusAddress(rs.getString("cus_address"));
                 String genderStr = rs.getString("cus_gender");
+                customer.setStatus(rs.getBoolean("status"));
+
                 if (genderStr != null) {
                     try {
                         customer.setCusGender(Customer.Gender.valueOf(genderStr.toUpperCase()));
@@ -35,8 +37,10 @@ public class CustomerDAOImp implements CustomerDAO {
                         System.err.println("Giá trị gender không hợp lệ: " + genderStr);
                     }
                 }
-                // Thêm customer vào danh sách sau khi đã set các thuộc tính
-                customers.add(customer);
+
+                if (customer.isStatus()) {
+                    customers.add(customer);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi lấy danh sách khách hàng: " + e.getMessage());
@@ -53,12 +57,13 @@ public class CustomerDAOImp implements CustomerDAO {
         boolean result = false;
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call proc_savecustomer(?,?,?,?,?)}");
+            callSt = conn.prepareCall("{call proc_savecustomer(?,?,?,?,?,?)}");
             callSt.setString(1, customer.getCusName());
             callSt.setString(2, customer.getCusPhone());
             callSt.setString(3, customer.getCusEmail());
             callSt.setString(4, customer.getCusAddress());
             callSt.setString(5, customer.getCusGender().toString().toLowerCase());
+            callSt.setBoolean(6, customer.isStatus());
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
                 customer.setCusId(rs.getInt("cus_id"));
@@ -79,13 +84,14 @@ public class CustomerDAOImp implements CustomerDAO {
         boolean result = false;
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call proc_updatecustomer(?,?,?,?,?,?)}");
+            callSt = conn.prepareCall("{call proc_updatecustomer(?,?,?,?,?,?,?)}");
             callSt.setInt(1, customer.getCusId());
             callSt.setString(2, customer.getCusName());
             callSt.setString(3, customer.getCusPhone());
             callSt.setString(4, customer.getCusEmail());
             callSt.setString(5, customer.getCusAddress());
             callSt.setString(6, customer.getCusGender().toString().toLowerCase());
+            callSt.setBoolean(7, customer.isStatus());
 
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
@@ -140,6 +146,7 @@ public class CustomerDAOImp implements CustomerDAO {
                 customer.setCusEmail(rs.getString("cus_email"));
                 customer.setCusAddress(rs.getString("cus_address"));
                 String genderStr = rs.getString("cus_gender");
+                customer.setStatus(rs.getBoolean("status"));
                 if (genderStr != null) {
                     try {
                         customer.setCusGender(Customer.Gender.valueOf(genderStr.toUpperCase()));
